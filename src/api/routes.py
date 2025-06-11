@@ -119,3 +119,24 @@ def handle_delete_user(userId):
     db.session.commit()
 
     return jsonify({"message": "User deleted successfully"}), 200
+
+# TODO: Implement the actual token generation logic.
+
+
+@api.route('/token', methods=['POST'])
+def handle_token():
+    body = request.get_json()
+
+    if not body or 'token' not in body:
+        raise APIException('Invalid input', status_code=400)
+
+    token = body['token']
+
+    # Needs to validate the token and return user info
+    # just return the token for now
+    response_body = {
+        "token": token,
+        "message": "Token received successfully"
+    }
+
+    return jsonify(response_body), 200
