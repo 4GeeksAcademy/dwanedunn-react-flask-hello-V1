@@ -53,3 +53,72 @@ def handle_users():
         })
 
     return jsonify(response_body), 200
+
+
+@api.route('/users', methods=['POST'])
+def handle_create_user():
+    body = request.get_json()
+
+    if not body or not all(key in body for key in ('email', 'first_name', 'last_name')):
+        raise APIException('Invalid input', status_code=400)
+
+    new_user = User(
+        email=body['email'],
+        first_name=body['first_name'],
+        last_name=body['last_name']
+    )
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    response_body = {
+        "id": new_user.id,
+        "email": new_user.email,
+        "first_name": new_user.first_name,
+        "last_name": new_user.last_name
+    }
+
+    return jsonify(response_body), 201
+
+
+@api.route('/users/<int:userId>', methods=['PUT'])
+def handle_update_user(userId):
+    body = request.get_json()
+    user = User.query.get(userId)
+
+    if not user:
+        raise APIException('User not found', status_code=404)
+
+    if not body or not all(key in body for key in ('email', 'first_name', 'last_name')):
+        raise APIException('Invalid input', status_code=400)
+
+    user.email = body['email']
+    user.first_name = body['first_name']
+    user.last_name = body['last_name']
+
+    db.session.commit()
+
+    response_body = {
+        "id": user.id,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name
+    }
+
+    return jsonify(response_body), 200
+
+
+@api.route('/users/<int:userId>', methods=['DELETE'])
+def handle_delete_user(userId):
+    user = User.query.get(userId)
+
+    if not user:
+        raise APIException('User not found', status_code=404)
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({"message": "User deleted successfully"}), 200
+
+
+@api.route('/users/<int:userId>/posts', methods=['GET'])
