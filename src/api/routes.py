@@ -119,6 +119,3 @@ def handle_delete_user(userId):
     db.session.commit()
 
     return jsonify({"message": "User deleted successfully"}), 200
-
-
-@api.route('/users/<int:userId>/posts', methods=['GET'])
