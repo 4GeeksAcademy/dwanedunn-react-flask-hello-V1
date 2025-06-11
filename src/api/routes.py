@@ -20,3 +20,36 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+
+@api.route('/profile/<int:userId>', methods=['GET'])
+def handle_profile(userId):
+    user = User.query.get(userId)
+
+    if not user:
+        raise APIException('User not found', status_code=404)
+
+    response_body = {
+        "id": user.id,
+        "email": user.email,
+        "first_name": user.first_name,
+        "last_name": user.last_name
+    }
+
+    return jsonify(response_body), 200
+
+
+@api.route('/users', methods=['GET'])
+def handle_users():
+    users = User.query.all()
+    response_body = []
+
+    for user in users:
+        response_body.append({
+            "id": user.id,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name
+        })
+
+    return jsonify(response_body), 200
