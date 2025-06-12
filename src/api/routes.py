@@ -6,6 +6,12 @@ from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
+# flask_jwt_extended
+
+
+from flask_jwt_extended import jwt_required
+
+
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
@@ -125,4 +131,11 @@ def handle_delete_user(userId):
 @api.route('/token', methods=['POST'])
 def generate_token():
 
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    if email != "test" or password != "test":
+        return jsonify({"msg": "Bad email or password"}), 401
+
+    access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token)
     return jsonify(response_body), 200
