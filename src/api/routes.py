@@ -6,8 +6,6 @@ from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
-# flask_jwt_extended
-
 
 from flask_jwt_extended import jwt_required
 
