@@ -120,23 +120,25 @@ def handle_delete_user(userId):
 
     return jsonify({"message": "User deleted successfully"}), 200
 
-# TODO: Implement the actual token generation logic.
 
-
+# Generate the token for the user based on the email and password
 @api.route('/token', methods=['POST'])
-def handle_token():
+def handle_generate_token():
     body = request.get_json()
 
-    if not body or 'token' not in body:
+    if not body or not all(key in body for key in ('email', 'password')):
         raise APIException('Invalid input', status_code=400)
 
-    token = body['token']
+    email = body['email']
+    password = body['password']
 
-    # Needs to validate the token and return user info
-    # just return the token for now
+    # TODO: validate the user credentials
+    # ALSO: return a real token instead of a dummy one
+    token = f"dummy-token-for-{email}"
+
     response_body = {
         "token": token,
-        "message": "Token received successfully"
+        "message": "Token generated successfully"
     }
 
     return jsonify(response_body), 200
