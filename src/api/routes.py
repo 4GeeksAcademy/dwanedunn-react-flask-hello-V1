@@ -132,8 +132,7 @@ def handle_generate_token():
     email = body['email']
     password = body['password']
 
-    # TODO: validate the user credentials
-    # ALSO: return a real token instead of a dummy one
+    # TODO: validate the user credentials, & return a real token instead of a dummy one
     token = f"dummy-token-for-{email}"
 
     response_body = {
