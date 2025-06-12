@@ -12,13 +12,13 @@ from flask_cors import CORS
 from flask_jwt_extended import jwt_required
 
 
-api = Blueprint('api', __name__)
+app = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
-CORS(api)
+CORS(app)
 
 
-@api.route('/hello', methods=['POST', 'GET'])
+@app.route('/hello', methods=['POST', 'GET'])
 def handle_hello():
 
     response_body = {
@@ -28,12 +28,12 @@ def handle_hello():
     return jsonify(response_body), 200
 
 
-@api.route('/profile/<int:userId>', methods=['GET'])
+@app.route('/profile/<int:userId>', methods=['GET'])
 def handle_profile(userId):
     user = User.query.get(userId)
 
     if not user:
-        raise APIException('User not found', status_code=404)
+        raise appException('User not found', status_code=404)
 
     response_body = {
         "id": user.id,
@@ -45,7 +45,7 @@ def handle_profile(userId):
     return jsonify(response_body), 200
 
 
-@api.route('/users', methods=['GET'])
+@app.route('/users', methods=['GET'])
 def handle_users():
     users = User.query.all()
     response_body = []
@@ -61,7 +61,7 @@ def handle_users():
     return jsonify(response_body), 200
 
 
-@api.route('/users', methods=['POST'])
+@app.route('/users', methods=['POST'])
 def handle_create_user():
     body = request.get_json()
 
@@ -87,7 +87,7 @@ def handle_create_user():
     return jsonify(response_body), 201
 
 
-@api.route('/users/<int:userId>', methods=['PUT'])
+@app.route('/users/<int:userId>', methods=['PUT'])
 def handle_update_user(userId):
     body = request.get_json()
     user = User.query.get(userId)
@@ -114,7 +114,7 @@ def handle_update_user(userId):
     return jsonify(response_body), 200
 
 
-@api.route('/users/<int:userId>', methods=['DELETE'])
+@app.route('/users/<int:userId>', methods=['DELETE'])
 def handle_delete_user(userId):
     user = User.query.get(userId)
 
@@ -128,7 +128,7 @@ def handle_delete_user(userId):
 
 
 # Generate the token for the user based on the email and password
-@api.route('/token', methods=['POST'])
+@app.route('/token', methods=['POST'])
 def generate_token():
 
     email = request.json.get("email", None)
